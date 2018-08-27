@@ -1,0 +1,166 @@
+<!-- :: 
+STUFF HERE IS IGNORED
+MIGHT BE USFEUL ;]
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="HTADOC" xmlns="http://www.w3.org/1999/xhtml"$if(lang)$ lang="$lang$" xml:lang="$lang$"$endif$$if(dir)$ dir="$dir$"$endif$>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <meta name="generator" content="pandoc" />
+    $for(author-meta)$
+    <meta name="author" content="$author-meta$" />
+    $endfor$
+    $if(date-meta)$
+    <meta name="date" content="$date-meta$" />
+    $endif$
+    $if(keywords)$
+    <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+    $endif$    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <HTA:APPLICATION
+    ID="HTADOC.18.08.27.01"
+    APPLICATIONNAME="Title Here"
+    CAPTION="Yes"
+    BORDER="thick"
+    ICON="icon.ico"
+    SHOWINTASKBAR="Yes"
+    SINGLEINSTANCE="Yes"
+    SYSMENU=""
+    WINDOWSTATE="maximize"
+    VERSION="18.08.27.01"
+    INNERBORDER="No"
+    SELECTION="Yes"
+    MAXIMIZEBUTTON="yes"
+    MINIMIZEBUTTON="yes"
+    NAVIGABLE="No"
+    CONTEXTMENU=""
+    BORDERSTYLE=""
+    SCROLL="No"
+    SCROLLFLAT="No"
+    >    
+    <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+    <style type="text/css">code{white-space: pre;}</style>
+    $if(quotes)$
+    <style type="text/css">q { quotes: "“" "”" "‘" "’"; }</style>
+    $endif$
+    $if(highlighting-css)$
+    <style type="text/css">
+    $highlighting-css$
+    </style>
+    $endif$ 
+    $for(css)$
+    <link rel="stylesheet" href="$css$" type="text/css" />
+    $endfor$
+    $if(math)$
+    $math$
+    $endif$
+    $for(header-includes)$
+    $header-includes$
+    $endfor$       
+    <!-- Bootstrap core CSS -->
+    <link href="_common/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="_common/assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#" id="home">Home</a>
+                </li>
+                $for(sections)$
+                <li>
+                    <a href="#" id="$sections.id$" class="section_link">$sections.name$</a>
+                </li>                    
+                $endfor$                 
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <div id="topnav">
+          <a href="#" class="menu-toggle">Toggle Sidebar</a>
+          <a class="active" id="topnav-home">Home</a>
+          <a href="#" id="requirements" class="powershell">Run Powershell Command!
+          <!--         
+           'Hello from Powershell!'       
+          -->
+          </a>      
+          <a href="#" class="shell" data-shell="cmd">Start cmd!</a>
+          <a href="#" id="about">About
+            <!--
+            HTA Interactive Document
+            Author: Bert Tejeda
+            Version: 18.08.27.01
+            -->
+          </a>
+        </div>
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                $for(include-before)$
+                $include-before$
+                $endfor$
+                $if(title)$
+                <div id="$idprefix$header">
+                <h1 class="title">$title$</h1>
+                $if(subtitle)$
+                <span class="subtitle">$subtitle$|</span>
+                $endif$
+                $if(author)$
+                $for(author)$
+                <span class="author">$author.name$ $if(author.affiliation)$($author.affiliation$)$endif$|</span>
+                $endfor$
+                $endif$
+                $if(date)$<span class="date">$date$|</span>$endif$
+                </div>
+                $endif$
+                <hr class="style-eight">
+                $if(toc)$
+                <div id="$idprefix$TOC">
+                $toc$
+                </div>
+                $endif$
+                <div id="content">
+                $body$
+                </div>
+                $for(include-after)$
+                $include-after$
+                $endfor$   
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- JavaScript -->
+    <script type="text/javascript">
+    // Instantiate Windows Script Host ShellObject
+    var WshShell = new ActiveXObject("WScript.Shell");
+    // Instantiate Scripting FileSystemObject
+    var FileManager = new ActiveXObject("Scripting.FileSystemObject");
+    var ForReading = 1
+    var ForWriting = 2
+    var ForAppending = 8    
+    var CWD = window.document.location.pathname;
+    var date = new Date();
+    </script>
+    <script src="_common/assets/js/jquery.min.js"></script>
+    <script src="_common/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="_common/assets/js/string.js"></script>
+    <script src="_common/assets/js/misc.js"></script>
+    <script src="_common/assets/js/web.js"></script>
+    <script src="_common/assets/js/shell.js"></script>
+    <script src="_common/assets/js/start.js"></script>
+    <script src="_common/assets/js/console.js"></script>
+    <script src="_common/assets/js/ui.js"></script>
+
+</body>
+</html>

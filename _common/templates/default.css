@@ -1,0 +1,21 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+
+body{
+    font-family: "PT Sans";
+} 
+
+h1.title{
+
+    font-size: 3rem;
+}
+
+div.sourceCode {
+    background-color: #e8e8e8;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
