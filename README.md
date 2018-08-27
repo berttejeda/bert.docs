@@ -17,6 +17,13 @@ TODO
 
 MORE DOCUMENTATION TO COME
 
+# Requirements
+
+**python 2.7+**
+[pandoc](https://pandoc.org/installing.html)
+[pp](https://github.com/CDSoft/pp) (Precompiled binaries available for Windows and Linux)
+[cmder][http://cmder.net/](optional, full version is best as it ships with git-bash)
+
 # How to use
 
 I've created a wrapper script that simplifies usage:
