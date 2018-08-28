@@ -1,3 +1,23 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Interactive HTA Documents - Powershell et, al](#interactive-hta-documents---powershell-et-al)
+- [Why?](#why)
+- [Implementation](#implementation)
+- [Requirements](#requirements)
+- [Features](#features)
+- [How to use](#how-to-use)
+  - [Example1: Build an HTA application from a markdown file](#example1-build-an-hta-application-from-a-markdown-file)
+  - [Example2: Add powershell to your document](#example2-add-powershell-to-your-document)
+  - [Example3: Invoke a cmd shell from your document](#example3-invoke-a-cmd-shell-from-your-document)
+- [Appendix](#appendix)
+  - [Under the hood](#under-the-hood)
+    - [Powershell Invocation](#powershell-invocation)
+  - [Sources](#sources)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 Interactive HTA Documents - Powershell et, al
 ===================
 
@@ -15,13 +35,13 @@ The layout is clean, and I managed to tweak it to my liking: check it out:
 
 Here's how I accomplished my goal:
 
-- markdown for easy content creation, see [default.markdown](_template/default.markdown)
-- javascript ActiveX Objects for interaction with the Windows OS
-	- Powershell code can be embedded directly in your markdown and/or templates
-	- The same goes for cmd commands (although not as elegantly)
-- pandoc for content rendering, and for creating the single, self-contained output 
-- Markdown pre-processing with `pp`
-- cmder making the Windows commandline so much sweeter
+- [markdown](https://guides.github.com/features/mastering-markdown/) for easy content creation, see [default.markdown](_template/default.markdown)
+- [pandoc](https://pandoc.org/installing.html) for content rendering, and for creating the single, self-contained output 
+- markdown pre-processing with [pp](https://github.com/CDSoft/pp)
+- [javascript ActiveX Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ActiveXObject) for interaction with the Windows OS
+	- `powershell` code can be embedded directly in your markdown and/or templates, enclosed in html comment tags (*<!-- -->*), see examples
+	- The same goes for `cmd` commands (although not as elegantly)
+- [cmder](http://cmder.net/) for making the Windows commandline so much sweeter
 
 # Requirements
 
@@ -30,17 +50,17 @@ In order for all of this to work, you'll need:
 - **python 2.7+**
 - [pandoc](https://pandoc.org/installing.html)
 - [pp](https://github.com/CDSoft/pp) (Precompiled binaries available for Windows and Linux)
-- [cmder][http://cmder.net/](optional, full version is best as it ships with git-bash)
+- [cmder](http://cmder.net/)(optional, full version is best as it ships with git-bash)
 
 # Features
 
-The `build.sh` pandoc/pp wrapper script outputs a single .hta file as per specification.
+The [build.sh](build.sh) pandoc/pp wrapper script outputs a single .hta file as per specification.
 
 I plan on extending functionality to allow for wider integration of programming languages.
 
 # How to use
 
-The wrapper script `build.sh` should help get you started with using this project.
+The wrapper script [build.sh](build.sh) should help get you started with using this project.
 
 **usage**:
 
@@ -84,7 +104,9 @@ param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
 </a> 
 ```
 
-- Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
+As illustrated, you must enclose your commands in comment tags (*<!-- -->*)
+
+Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
 
 ## Example3: Invoke a cmd shell from your document
 
@@ -93,7 +115,7 @@ param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
 <a href="#" class="shell" data-shell="cmd">Start cmd!</a>
 ```
 
-- Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
+Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
 
 # Appendix
 
