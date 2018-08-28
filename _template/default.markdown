@@ -237,3 +237,8 @@ $ rm dist/*
 - - - -
 
 </div>
+
+!include(includes/section1.md)
+!include(includes/section2.md)
+!include(includes/section3.md)
+!include(includes/section4.md)
