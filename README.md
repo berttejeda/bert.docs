@@ -39,7 +39,7 @@ Here's how I accomplished my goal:
 - [pandoc](https://pandoc.org/installing.html) for content rendering, and for creating the single, self-contained output 
 - markdown pre-processing with [pp](https://github.com/CDSoft/pp)
 - [javascript ActiveX Objects](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Microsoft_JavaScript_extensions/ActiveXObject) for interaction with the Windows OS
-	- `powershell` code can be embedded directly in your markdown and/or templates, enclosed in html comment tags (*<!-- -->*), see examples
+	- `powershell` code can be embedded directly in your markdown and/or templates, enclosed in html comment tags `<!-- -->`, see examples
 	- The same goes for `cmd` commands (although not as elegantly)
 - [cmder](http://cmder.net/) for making the Windows commandline so much sweeter
 
@@ -104,7 +104,7 @@ param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
 </a> 
 ```
 
-As illustrated, you must enclose your commands in comment tags (*<!-- -->*)
+As illustrated, you must enclose your commands in comment tags `<!-- -->`
 
 Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
 
