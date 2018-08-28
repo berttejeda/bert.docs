@@ -13,7 +13,7 @@ if (reference != null){
 * For all html links (a) without a class or id, open the url as specified in the 'href' attribute
 */
 // $( "a.weblink" ).click(function() {
-$( "a:not([class])a:not([id])" ).click(function() {
+$( "a:not([class])a:not([id]), a.uri" ).click(function() {
 url = this.getAttribute('href')
 if (url != null){
     openURL(url)
