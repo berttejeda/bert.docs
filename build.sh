@@ -5,6 +5,16 @@ PREFIX="eval"
 DEFAULT_TEMPLATE=_template/templates/default.html
 DEFAULT_HEADER=_common/templates/header.html
 DEFAULT_CSS=_common/templates/default.css
+help(){
+    #
+    # Display Help/Usage
+    #
+    echo -e "Usage: ${0}"
+    for param in "${!params[@]}";do
+        echo "param: ${param}, help: ${params[${param}]}"
+    done
+    exit
+}
 # Declare accepted parameters
 declare -A params=(
 ["--source|-s"]="[some/markdown/file.md,some/other/markdown/file2.md,includes/*]"
@@ -19,6 +29,8 @@ declare -A params=(
 ["--interval|-i"]="[t>0]"
 ["--dry"]="Dry Run"
 )
+# Display help if no args
+if [[ $# -lt 1 ]];then help;fi
 # Parse arguments
 while (( "$#" )); do
     for param in "${!params[@]}";do
@@ -34,14 +46,8 @@ while (( "$#" )); do
     done
 shift
 done
-# Display Help/Usage if applicable
-if [[ (${#} <1) || (-n $help) ]];then 
-        echo -e "Usage: ${0}"
-    for param in "${!params[@]}";do
-        echo "param: ${param}, help: ${params[${param}]}"
-    done
-    exit
-fi
+# Display help if applicable
+if [[ -n $help ]];then help;fi
 # DRY RUN LOGIC
 if [[ -n $dry ]];then 
     PREFIX=echo
