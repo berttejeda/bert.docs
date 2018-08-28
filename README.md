@@ -60,15 +60,15 @@ The file is completely self-contained, with assets embedded as base64 objects.
 
 I've incorporated [HTAConsole](https://github.com/jeremyben/HTAConsole) into the source, which makes it substantially easier to troubleshoot bugs.
 
-Simply press **F12** to show the console. I use the feature throughout the codebase and will often utilize `console.log` for printing out helpful information to the console.
+Simply press **F12** to display the console. I use this feature throughout the codebase for printing helpful information to the console.
 
-I plan on extending functionality to allow for wider integration of programming languages.
+e.g. `console.log('some message')`
+
+I plan on extending overall functionality to allow for wider integration of programming languages.
 
 # How to use
 
 The wrapper script [build.sh](build.sh) should help get you started with using this project.
-
-**usage**:
 
 ```bash
 Usage: ./build.sh
