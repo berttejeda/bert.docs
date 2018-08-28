@@ -56,6 +56,12 @@ In order for all of this to work, you'll need:
 
 The [build.sh](build.sh) pandoc/pp wrapper script outputs a single .hta file as per specification.
 
+The file is completely self-contained, with assets embedded as base64 objects.
+
+I've incorporated [HTAConsole](https://github.com/jeremyben/HTAConsole) into the source, which makes it substantially easier to troubleshoot bugs.
+
+Simply press **F12** to show the console. I use the feature throughout the codebase and will often utilize `console.log` for printing out helpful information to the console.
+
 I plan on extending functionality to allow for wider integration of programming languages.
 
 # How to use
