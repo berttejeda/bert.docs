@@ -17,16 +17,16 @@ help(){
 }
 # Declare accepted parameters
 declare -A params=(
-["--source|-s"]="[some/markdown/file.md,some/other/markdown/file2.md,includes/*]"
-["--output|-o"]="[some/output/file.html]"
-["--template|-t"]="[some/template/file.html]"
-["--ppvars|-p"]="[some_preprocess_var=somevalue]"
-["--help|-h"]="display usage and exit"
-["--vars|-V"]="[some_pandoc_var=somevalue]"
-["--metavars|-m"]="[some_pandoc_meta_var=somevalue]"
-["--watchdir|-d"]="[somedir]"
-["--watch|-w"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
-["--interval|-i"]="[t>0]"
+["--source|-s$"]="[some/markdown/file.md,some/other/markdown/file2.md,includes/*]"
+["--output|-o$"]="[some/output/file.html]"
+["--template|-t$"]="[some/template/file.html]"
+["--ppvars|-p$"]="[some_preprocess_var=somevalue]"
+["--help|-h$"]="display usage and exit"
+["--vars|-V$"]="[some_pandoc_var=somevalue]"
+["--metavars|-m$"]="[some_pandoc_meta_var=somevalue]"
+["--watchdir|-d$"]="[somedir]"
+["--watch|-w$"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
+["--interval|-i$"]="[t>0]"
 ["--dry"]="Dry Run"
 )
 # Display help if no args
