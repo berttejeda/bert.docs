@@ -5,6 +5,7 @@ PREFIX="eval"
 DEFAULT_TEMPLATE=_template/templates/default.html
 DEFAULT_HEADER=_common/templates/header.html
 DEFAULT_CSS=_common/templates/default.css
+t=1
 help(){
     #
     # Display Help/Usage
@@ -52,10 +53,11 @@ if [[ -n $help ]];then help;fi
 if [[ -n $dry ]];then 
     PREFIX=echo
 fi
+
 # Parse file watcher patterns
 if [[ -n $watch ]];then
     if [[ "${watch}" =~ .*, ]];then 
-        for pattern in ${watch};do 
+        for pattern in ${watch//,/ };do
             watch_patterns+="'${pattern}',"
         done
         watch_patterns=" -name ${watch_patterns//,/ -o -name }"
@@ -91,11 +93,12 @@ if [[ -n $watch_patterns ]];then
     echo "Issuing initial build"
     # Invoke markdown pre-processor & pipe to pandoc
     $PREFIX "${pp_commands} | ${pandoc_commands}"
+    find_command="find "${watchdir}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
     echo "Done. Initial output file is ${output_file}."
-    echo "Monitoring for file changes as per ${watch_patterns}"
+    echo "Monitoring for file changes as per ${find_command}"
     if [[ $PREFIX == 'eval' ]];then
         while true;do 
-            find_result=$(eval "find "${dir}" -newermt '${t} seconds ago' \( ${watch_patterns} \)")
+            find_result=$(eval "${find_command}")
             if [[ -n "${find_result}" ]];then 
                 echo "Detected modification in ${find_result}"
                 echo "Issuing rebuild"
