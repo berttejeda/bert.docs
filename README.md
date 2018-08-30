@@ -112,9 +112,24 @@ param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
 
 As illustrated, you must enclose your commands in comment tags ```<!-- -->```
 
+Do the same, this time with a non-interactive shell session:
+
+```powershell
+<a href="#" id="testing" class="powershell" data-interactive="0">CLICKME: POWERSHELL
+<!--         
+'You executed powershell!'
+&pause
+-->
+</a> 
+```
+
 Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
 
-## Example3: Invoke a cmd shell from your document
+Again, you can access the javascript console by pressing **F12**.
+
+You can review the STDOUT of non-interactive powershell command.
+
+## Example4: Invoke a cmd shell from your document
 
 - Add a link with class 'shell' to the [default.markdown](_template/default.markdown):
 ```cmd

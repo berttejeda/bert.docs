@@ -46,11 +46,11 @@ var pause=this.getAttribute('data-pause')
 if (pause != 1){
     pause = 0
 }
-var hidden=this.getAttribute('data-hidden')
-if (hidden != 1){
-    hidden = 0
+var interactive=this.getAttribute('data-interactive')
+if (interactive != 0){
+    interactive = 1
 }
-powershell(command_string, hidden, pause);
+powershell(command_string, interactive, pause);
 }); 
 //------------------------------------------------------------------------------------------------------------------------------------------
 /**

@@ -2,26 +2,33 @@
 /**
 * Silently execute a powershell command. 
 */
-function powershell(command_string, hidden, pause){
+function powershell(command_string, interactive, pause){
     start = 'start \"\"'
     if (pause == 1){
         pause = '&pause'
     } else {
         pause = ''
     }
-    if (hidden == 1){
-        hidden = '-w hidden -nologo -nop'
+    if (interactive == 0){
+        hidden = '-w hidden -nologo'
         start = ''
     } else {
         hidden = ''
     }    
+    // Instantiate  Windows Script Host FileSystemObject
+    INTERMEDIARY_SCRIPT_NAME = '.powershell.commands.bat'
+    INTERMEDIARY_SCRIPT_FILE = CWD+INTERMEDIARY_SCRIPT_NAME
+    OUTPUTFILENAME = '.powershell.commands.log'
+    OUTPUTFILE = CWD+OUTPUTFILENAME
+    var result = "";
     var clipboardData_orig = window.clipboardData.getData("Text");
     window.clipboardData.setData("Text",command_string); 
     var clipboardData = window.clipboardData.getData("Text");
     console.log("Powershell command is: " + clipboardData)
-    command = String.format("%comspec% /c {0} PowerShell -noprofile {1} -Command $commands=$(\"Set-ExecutionPolicy Bypass -Scope Process -Force;add-type -AssemblyName System.Windows.Forms;[String]::Join( ';', $(  ( [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n' ) ))\");Invoke-Expression $commands;{2}", start, hidden, pause)
+    command = String.format("%comspec% /c {0} PowerShell -noprofile {1} -Command $commands=$(\"Set-ExecutionPolicy Bypass -Scope Process -Force;add-type -AssemblyName System.Windows.Forms;$clipboardData = [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n';[String]::Join( ';', $(  ( $clipboardData ) ))\");Invoke-Expression $commands 2>&1;{2} | clip", start, hidden, pause);
     console.log("Invoked Powershell command via: " + command)
     WshShell.run(command,0,true);
+    console.log("STDOUT: " + window.clipboardData.getData("Text"));
     setTimeout(function(t){
     window.clipboardData.setData("Text",clipboardData_orig); 
     }, 2000);
