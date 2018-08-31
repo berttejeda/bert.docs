@@ -134,7 +134,7 @@ $("a[id='about']").click(function(e) {
 * For the html link with id 'home', if clicked, hide all divs with class 'section', show the div with id 'start'
 */
 $( "a[id='home'], a[id='topnav-home']" ).click(function() {
-    $(".section").hide();
+    $(".section, section").hide();
     $("div#start").show();
 });    
 /**
@@ -142,8 +142,8 @@ $( "a[id='home'], a[id='topnav-home']" ).click(function() {
 */
 $( ".section_link" ).click(function() {
     $("div#start").hide();
-    $(".section").hide();
-    $("div#".concat(this.id)).show();
+    $(".section, section").hide();
+    $("section#".concat(this.id)).show();
 }); 
 /**
 * For html links with class 'flash', if clicked, flash the dom object as specified by the 'data-selector' html tag
