@@ -3,7 +3,7 @@
 @@setlocal
 @@set POWERSHELL_BAT_ARGS=%*
 @@if defined POWERSHELL_BAT_ARGS set POWERSHELL_BAT_ARGS=%POWERSHELL_BAT_ARGS:"=\"%
-@@PowerShell -noprofile -Command Invoke-Expression $('$args=@(^&{$args} %POWERSHELL_BAT_ARGS%);'+[String]::Join(';',$((Get-Content '%~f0') -notmatch '^^@@'))) & pause & goto :EOF
+@@PowerShell -noprofile -Command Invoke-Expression $('$args=@(^&{$args} %POWERSHELL_BAT_ARGS%);'+[String]::Join(';',$((Get-Content '%~f0') -notmatch '^^@@'))) & goto :EOF
 Set-ExecutionPolicy Bypass -Scope Process -Force
 $DEFAULT_TEMPLATE = "_template/templates/default.html"
 $DEFAULT_OUTPUT_FILEEXT = "hta"
@@ -14,12 +14,13 @@ $params=@{'--source|-s$' =  "[some/markdown/file.md,some/other/markdown/file2.md
 '--output|-o$' =  "[some/output/file.html]";
 '--template|-t$' =  "[some/template/file.html]";
 '--ppvars|-p$' =  "[some_preprocess_var=somevalue]";
-'--help|-h$' =  "display usage and exit";
 '--vars|-V$' =  "[some_pandoc_var=somevalue]";
 '--metavars|-m$' =  "[some_pandoc_meta_var=somevalue]";
 '--watchdir|-d$' =  "[somedir]";
 '--watch|-w$' =  "[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]";
 '--interval|-i$' =  "[t>0]";
+'--no-aio|-aio$' =  "No All-In-One";
+'--help|-h$' =  "display usage and exit";
 '--dry|-y$' =  "Dry Run";
 }
 FUNCTION Usage {
@@ -108,15 +109,20 @@ If ($metavars) {
 	$metavars = $metavars.replace("_@DELIM@_"," --metadata ")
 	$pandoc_commands += "--metadata $($metavars.Substring(0,$metavars.Length-11)) "
 }
-$pandoc_commands += "--self-contained "
-$pandoc_commands += " --standalone "
+
+@@:: Check if we want a non-all-in-one document
+If ( -Not $noaio ) {
+	$pandoc_commands += "--self-contained "
+	$pandoc_commands += " --standalone "
+}
+
 @@:: Echo commands if this is a Dry Run
 If ($dry) {
 	Write-Host "$pp_commands | $pandoc_commands"
 
 } else {
 	try{
-		"Issuing build"
+		"Invoking build commands."
 		Invoke-Expression "$pp_commands | $pandoc_commands"
 		"Done. Output file is $output_file"
 	} catch {

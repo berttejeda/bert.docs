@@ -72,31 +72,38 @@ The wrapper script [build.sh](build.sh) should help get you started with using t
 
 ```bash
 Usage: ./build.sh
-param: --vars|-V, help: [some_pandoc_var=somevalue]
-param: --help|-h, help: display usage and exit
-param: --ppvars|-p, help: [some_preprocess_var=somevalue]
+param: --watchdir|-wd$, help: [somedir]
+param: --interval|-i$, help: [t>0]
+param: --vars|-V$, help: [some_pandoc_var=somevalue]
+param: --source|-s$, help: [some/markdown/file.md,some/other/markdown/file2.md,includes/*]
 param: --dry, help: Dry Run
-param: --template|-t, help: [some/template/file.html]
-param: --watchdir|-d, help: [somedir]
-param: --interval|-i, help: [t>0]
-param: --metavars|-m, help: [some_pandoc_meta_var=somevalue]
-param: --output|-o, help: [some/output/file.html]
-param: --source|-s, help: [some/markdown/file.md,some/other/markdown/file2.md,includes/*]
-param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
-
+param: --output|-o$, help: [some/output/file.html]
+param: --watch|-w$, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
+param: --ppvars|-p$, help: [some_preprocess_var=somevalue]
+param: --help|-h$, help: display usage and exit
+param: --no-aio|-aio$, help: No All-In-One
+param: --template|-t$, help: [some/template/file.html]
+param: --metavars|-m$, help: [some_pandoc_meta_var=somevalue]
 ```
 
 ## Example1: Build an HTA application from a markdown file
 
-- Invoke the build script
-	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html`
-- Invoke the same, but as a dry run:
-	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html --dry`
-		- The above `--dry` run will print out:<br />
-		`pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained
---standalone`
-- Again, only this time monitoring for file changes, triggering a rebuild if any files are modified within (t) seconds (where t is 1 by default)
-	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.c ss,*.html`
+- Invoke the build script from commandline:
+    - From `cmder`/`git-bash`:
+        - bash script:
+            - `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html`
+        - powershell script:
+            - `./build.bat -s _template\\default.markdown -o default.hta -t _template\\templates\\default.html`
+	- From `powershell`:
+        - `.\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html`
+    - To issue a dry run, simply include the `--dry` flag when you call the build script
+    	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
+    		`pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
+    - I've incorporated a poor man's filewatcher into the bash script which utilizes the `find` command to monitor file changes and trigger a rebuild based on specified parameters, e.g.
+    	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.c ss,*.html -i 5`
+- Invoke the build script from the hta:
+    - Just click the `Rebuild` button located in the top navigation bar.<br />
+    This will call the powershell build script. Press F5 to refresh the HTA application
 
 ## Example2: Build an HTML file from the markdown file
 
