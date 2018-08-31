@@ -722,12 +722,6 @@ function powershell(command_string, interactive, pause){
     } else {
         hidden = ''
     }    
-    // Instantiate  Windows Script Host FileSystemObject
-    INTERMEDIARY_SCRIPT_NAME = '.powershell.commands.bat'
-    INTERMEDIARY_SCRIPT_FILE = CWD+INTERMEDIARY_SCRIPT_NAME
-    OUTPUTFILENAME = '.powershell.commands.log'
-    OUTPUTFILE = CWD+OUTPUTFILENAME
-    var result = "";
     var clipboardData_orig = window.clipboardData.getData("Text");
     window.clipboardData.setData("Text",command_string); 
     var clipboardData = window.clipboardData.getData("Text");
