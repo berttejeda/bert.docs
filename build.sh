@@ -5,6 +5,7 @@ PREFIX="eval"
 DEFAULT_TEMPLATE=_template/templates/default.html
 DEFAULT_HEADER=_common/templates/header.html
 DEFAULT_CSS=_common/templates/default.css
+DELIM=_@DELIM@_
 t=1
 help(){
     #
@@ -25,7 +26,7 @@ declare -A params=(
 ["--help|-h$"]="display usage and exit"
 ["--vars|-V$"]="[some_pandoc_var=somevalue]"
 ["--metavars|-m$"]="[some_pandoc_meta_var=somevalue]"
-["--watchdir|-d$"]="[somedir]"
+["--watchdir|-wd$"]="[somedir]"
 ["--watch|-w$"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
 ["--interval|-i$"]="[t>0]"
 ["--dry"]="Dry Run"
@@ -37,12 +38,7 @@ while (( "$#" )); do
     for param in "${!params[@]}";do
         if [[ "$1" =~ $param ]]; then
             var=${param//-/}
-            var=${var%|*}
-            if [[ $var ]];then
-                declare ${var%|*}+="${2} "
-            else
-                eval "${var%|*}=${2}"
-            fi
+            eval "if [[ (${var%|*} =~ .*var.*) ]];then declare ${var%|*}+='${2}${DELIM}';else ${var%|*}=${2-true};fi;"
         fi
     done
 shift
@@ -61,7 +57,8 @@ if [[ -n $watch ]];then
             watch_patterns+="'${pattern}',"
         done
         watch_patterns=" -name ${watch_patterns//,/ -o -name }"
-        watch_patterns="${watch_patterns: :-9}" # strip the trailing -o -name # TOFIX: this ain't good
+        option='-o -name '
+        watch_patterns="${watch_patterns: :-${#option}}" # strip the trailing option
     else 
         watch_patterns=" -name ${watch}"
     fi
@@ -69,8 +66,12 @@ fi
 # Build pre-processor commands
 pp_commands="pp "
 if [[ -n $ppvars ]];then
-    ppvars=${ppvars// / -D }
-    pp_commands+="-D ${ppvars: :-3} "
+    if [[ $ppvars =~ .*${DELIM}.* ]];then
+        ppvars=${ppvars//${DELIM}/ -D }
+        pp_commands+="-D ${ppvars: :-3} "
+    else
+        pp_commands+="-D $ppvars "
+    fi
 fi
 pp_commands+="${source} "
 # Build pandoc commands
@@ -81,10 +82,14 @@ pandoc_commands+="-c '${css-${DEFAULT_CSS}}' "
 pandoc_commands+="-H '${header-${DEFAULT_HEADER}}' "
 pandoc_commands+="--template ${template-${DEFAULT_TEMPLATE}} "
 if [[ $vars ]];then
-    pandoc_commands+="-V ${vars: :-3} "
+    vars=${vars//${DELIM}/ -V }
+    option='-V '
+    pandoc_commands+="-V ${vars: :-${#option}} " # strip the trailing option
 fi
 if [[ $metavars ]];then
-    pandoc_commands+="--metadata ${metavars: :-11} "
+    metavars=${metavars//${DELIM}/ --metadata }
+    option="--metadata "
+    pandoc_commands+="--metadata ${metavars: :-${#option}} " # strip the trailing option
 fi
 pandoc_commands+="--self-contained "
 pandoc_commands+=" --standalone "
@@ -93,7 +98,7 @@ if [[ -n $watch_patterns ]];then
     echo "Issuing initial build"
     # Invoke markdown pre-processor & pipe to pandoc
     $PREFIX "${pp_commands} | ${pandoc_commands}"
-    find_command="find "${watchdir}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
+    find_command="find "${watchdir-./}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
     echo "Done. Initial output file is ${output_file}."
     echo "Monitoring for file changes as per ${find_command}"
     if [[ $PREFIX == 'eval' ]];then
