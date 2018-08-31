@@ -51,7 +51,7 @@ In order for all of this to work, you'll need:
 
 - **python 2.7+**
 - [pandoc](https://pandoc.org/installing.html)
-- [pp](https://github.com/CDSoft/pp) (Precompiled binaries available for Windows and Linux)
+- [pp](https://github.com/CDSoft/pp) (Pre-compiled binaries available for Windows and Linux)
 - [cmder](http://cmder.net/)(optional, full version is best as it ships with git-bash)
 
 # Features
@@ -70,10 +70,10 @@ I plan on extending overall functionality to allow for wider integration of prog
 
 # How to use
 
-The wrapper script [build.sh](build.sh) should help get you started with using this project.
+The wrapper scripts [build.sh](build.sh) or [build.bat](build.bat) should help get you started with using this project.
 
 ```bash
-Usage: ./build.sh
+Usage: ./build.sh/build.bat
 param: --watchdir|-wd$, help: [somedir]
 param: --interval|-i$, help: [t>0]
 param: --vars|-V$, help: [some_pandoc_var=somevalue]
@@ -87,6 +87,8 @@ param: --no-aio|-aio$, help: No All-In-One
 param: --template|-t$, help: [some/template/file.html]
 param: --metavars|-m$, help: [some_pandoc_meta_var=somevalue]
 ```
+
+Note: Although the same parameters are available to `build.bat`, I have not implemented the filewatcher functionality as is present in the bash equivalent.
 
 ## Example1: Build an HTA application from a markdown file
 
@@ -102,7 +104,7 @@ param: --metavars|-m$, help: [some_pandoc_meta_var=somevalue]
     	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
     		`pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
     - I've incorporated a poor man's filewatcher into the bash script which utilizes the `find` command to monitor file changes and trigger a rebuild based on specified parameters, e.g.
-    	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.c ss,*.html -i 5`
+    	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.css,*.html -i 5`
 - Invoke the build script from the hta:
     - Just click the `Rebuild` button located in the top navigation bar.<br />
     This will call the powershell build script. Press F5 to refresh the HTA application
