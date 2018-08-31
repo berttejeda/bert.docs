@@ -132,7 +132,6 @@ Do the same, this time with a non-interactive shell session:
 <a href="#" id="testing" class="powershell" data-interactive="0">CLICKME: POWERSHELL
 <!--         
 'You executed powershell!'
-&pause
 -->
 </a> 
 ```
