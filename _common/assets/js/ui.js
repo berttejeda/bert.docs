@@ -23,8 +23,10 @@ if (url != null){
 * For all html links (a) with class 'powershell' invoke the powershell command encased in comment strings <!--POWERSHELLCODE-->
 */
 $( "a.powershell" ).click(function() {
+    
 var command_string = ''
 var test = this.innerHTML.match(/<!--[\s\S]*-->/)
+
 if (test != null){
     var regex = /<!--|-->/gi;
     command_string = test[0].replace(regex,'')
@@ -42,15 +44,21 @@ if (test != null){
     alert(command_string)   
     return
 }
+
 var pause=this.getAttribute('data-pause')
 if (pause != 1){
     pause = 0
 }
+
 var interactive=this.getAttribute('data-interactive')
 if (interactive != 0){
     interactive = 1
 }
+
+$(this).toggleClass('clicked');
 powershell(command_string, interactive, pause);
+$(this).toggleClass('clicked');
+
 }); 
 //------------------------------------------------------------------------------------------------------------------------------------------
 /**

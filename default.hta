@@ -263,7 +263,10 @@ color: black;
 background-color: #4CAF50;
 color: white;
 }
-</style>
+
+.clicked {
+background-color: red;
+}</style>
 </head>
 <body>
 
@@ -294,10 +297,16 @@ color: white;
           <a class="active" id="topnav-home">Home</a>
           <a href="#" id="requirements" class="powershell">Run Powershell Command!
           <!--         
-           'Hello from Powershell!'       
+           'Hello from Powershell!'
+           &pause     
+          -->
+          </a> 
+          <a href="#" class="shell" data-shell="cmd">Start cmd!</a>
+          <a href="#" id="rebuild" class="powershell" data-interactive="0">Rebuild
+          <!--         
+            .\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html
           -->
           </a>      
-          <a href="#" class="shell" data-shell="cmd">Start cmd!</a>
           <a href="#" id="about">About
             <!--
             HTA Interactive Document
@@ -1136,8 +1145,10 @@ if (url != null){
 * For all html links (a) with class 'powershell' invoke the powershell command encased in comment strings <!--POWERSHELLCODE-->
 */
 $( "a.powershell" ).click(function() {
+    
 var command_string = ''
 var test = this.innerHTML.match(/<!--[\s\S]*-->/)
+
 if (test != null){
     var regex = /<!--|-->/gi;
     command_string = test[0].replace(regex,'')
@@ -1155,15 +1166,21 @@ if (test != null){
     alert(command_string)   
     return
 }
+
 var pause=this.getAttribute('data-pause')
 if (pause != 1){
     pause = 0
 }
+
 var interactive=this.getAttribute('data-interactive')
 if (interactive != 0){
     interactive = 1
 }
+
+$(this).toggleClass('clicked');
 powershell(command_string, interactive, pause);
+$(this).toggleClass('clicked');
+
 }); 
 //------------------------------------------------------------------------------------------------------------------------------------------
 /**

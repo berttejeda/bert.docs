@@ -190,3 +190,7 @@ table td {
     color: white;
 }
 
+/* Add a color to the clicked link */
+.clicked {
+     background-color: red;
+}
