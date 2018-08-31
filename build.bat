@@ -75,8 +75,8 @@ If (get-command pp -ErrorAction silentlycontinue){
 }
 
 @@:: Check for required binaries
-If ( -Not (Test-Path $pandoc) -or -Not (Test-Path $pp) ) { 
-	"Error: Neither pp or pandoc were not found in your path or in the current working directory"
+If ( "-Not (Test-Path $pandoc) -or -Not (Test-Path $pp)" ) { 
+	"Error: Neither pp nor pandoc were found in your path or in the current working directory"
 	Exit
 }
 
