@@ -9,11 +9,13 @@
 - [Features](#features)
 - [How to use](#how-to-use)
   - [Example1: Build an HTA application from a markdown file](#example1-build-an-hta-application-from-a-markdown-file)
-  - [Example2: Add powershell to your document](#example2-add-powershell-to-your-document)
-  - [Example3: Invoke a cmd shell from your document](#example3-invoke-a-cmd-shell-from-your-document)
+  - [Example2: Build an HTML file from the markdown file](#example2-build-an-html-file-from-the-markdown-file)
+  - [Example3: Add powershell to your document](#example3-add-powershell-to-your-document)
+  - [Example4: Invoke a cmd shell from your document](#example4-invoke-a-cmd-shell-from-your-document)
 - [Appendix](#appendix)
   - [Under the hood](#under-the-hood)
     - [Powershell Invocation](#powershell-invocation)
+  - [Troubleshooting](#troubleshooting)
   - [Sources](#sources)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
