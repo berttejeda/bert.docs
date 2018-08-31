@@ -29,6 +29,7 @@ declare -A params=(
 ["--watchdir|-wd$"]="[somedir]"
 ["--watch|-w$"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
 ["--interval|-i$"]="[t>0]"
+["--no-aio|-aio$"]="No All-In-One"
 ["--dry"]="Dry Run"
 )
 # Display help if no args
@@ -91,13 +92,16 @@ if [[ $metavars ]];then
     option="--metadata "
     pandoc_commands+="--metadata ${metavars: :-${#option}} " # strip the trailing option
 fi
-pandoc_commands+="--self-contained "
-pandoc_commands+=" --standalone "
+if [[ -z $noaio ]];then 
+    pandoc_commands+="--self-contained "
+    pandoc_commands+=" --standalone "
+fi
 # Build output file
 if [[ -n $watch_patterns ]];then
     echo "Issuing initial build"
     # Invoke markdown pre-processor & pipe to pandoc
     $PREFIX "${pp_commands} | ${pandoc_commands}"
+    t=${interval-${t}}
     find_command="find "${watchdir-./}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
     echo "Done. Initial output file is ${output_file}."
     echo "Monitoring for file changes as per ${find_command}"

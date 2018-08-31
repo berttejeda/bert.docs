@@ -98,7 +98,12 @@ param: --watch|-w, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
 - Again, only this time monitoring for file changes, triggering a rebuild if any files are modified within (t) seconds (where t is 1 by default)
 	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.c ss,*.html`
 
-## Example2: Add powershell to your document
+## Example2: Build an HTML file from the markdown file
+
+- Invoke the same build script from [Example1](#example1-build-an-hta-application-from-a-markdown-file), with just one difference:
+    `-o default.html`
+
+## Example3: Add powershell to your document
 
 - Add some powershell to the [default.markdown](_template/default.markdown):
 ```powershell
@@ -148,19 +153,21 @@ The powershell invocation is done through a WScript.Shell ActiveX Object and cle
 
 so there is no need for intermediary scripts to handle the powershell code.
 
+From [shell.js](_common/assets/js/shell.js):
+
 ```javascript
 /**
 * Silently execute a powershell command. 
 */
-function powershell(command_string, hidden, pause){
+function powershell(command_string, interactive, pause){
     start = 'start \"\"'
     if (pause == 1){
         pause = '&pause'
     } else {
         pause = ''
     }
-    if (hidden == 1){
-        hidden = '-w hidden -nologo -nop'
+    if (interactive == 0){
+        hidden = '-w hidden -nologo'
         start = ''
     } else {
         hidden = ''
@@ -169,9 +176,10 @@ function powershell(command_string, hidden, pause){
     window.clipboardData.setData("Text",command_string); 
     var clipboardData = window.clipboardData.getData("Text");
     console.log("Powershell command is: " + clipboardData)
-    command = String.format("%comspec% /c {0} PowerShell -noprofile {1} -Command $commands=$(\"Set-ExecutionPolicy Bypass -Scope Process -Force;add-type -AssemblyName System.Windows.Forms;[String]::Join( ';', $(  ( [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n' ) ))\");Invoke-Expression $commands;{2}", start, hidden, pause)
+    command = String.format("%comspec% /c {0} PowerShell -noprofile {1} -Command $commands=$(\"Set-ExecutionPolicy Bypass -Scope Process -Force;add-type -AssemblyName System.Windows.Forms;$clipboardData = [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n';[String]::Join( ';', $(  ( $clipboardData ) ))\");Invoke-Expression $commands 2>&1;{2} | clip", start, hidden, pause);
     console.log("Invoked Powershell command via: " + command)
     WshShell.run(command,0,true);
+    console.log("STDOUT: " + window.clipboardData.getData("Text"));
     setTimeout(function(t){
     window.clipboardData.setData("Text",clipboardData_orig); 
     }, 2000);
@@ -211,15 +219,27 @@ var pause=this.getAttribute('data-pause')
 if (pause != 1){
     pause = 0
 }
-var hidden=this.getAttribute('data-hidden')
-if (hidden != 1){
-    hidden = 0
+var interactive=this.getAttribute('data-interactive')
+if (interactive != 0){
+    interactive = 1
 }
-powershell(command_string, hidden, pause);
-});
+powershell(command_string, interactive, pause);
+}); 
 ```
 
+see [ui.js](_common/assets/js/ui.js):
+
 Note the use of custom 'data-*' html attributes, keeping in compliance at least with HTML5.
+
+## Troubleshooting
+
+If you encounter errors in your document(s), try building with the `--no-aio/-a` flag, as with:
+
+- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html --no-aio`
+
+This will invoke the `pandoc` command without the `--standalone` and `--self-contained` flags, which results in a document that offers itself more willingly to inspection.
+
+Happy debugging :)
 
 ## Sources
 
