@@ -63,19 +63,18 @@ ForEach ($ARG In $ARGS) {
 @@:: Show Help If Applicable
 If ($help) { Usage }
 
-If ( get-command pandoc -ErrorAction silentlycontinue ){
-	$pandoc = $(get-command pandoc).Path
-} ElseIf ( Test-Path "$($PWD.PATH)\pandoc.exe" ) {
-	$pandoc = "$($PWD.PATH)\pandoc.exe"
-}
-If (get-command pp -ErrorAction silentlycontinue){
-	$pp = $(get-command pp).Path
-} ElseIf ( Test-Path "$($PWD.PATH)\pp.exe" ) {
-	$pp = "$($PWD.PATH)\pp.exe"
+ForEach ($binary in 'pandoc','pp') {
+	
+	If ( get-command $binary -ErrorAction silentlycontinue ){
+		Invoke-Expression "`$$binary = `$(get-command $binary).Path"
+	} ElseIf ( Test-Path "$($PWD.PATH)\$($binary).exe" ) {
+		Invoke-Expression "`$$binary = `"$($PWD.PATH)\$binary.exe`""
+	}
+
 }
 
 @@:: Check for required binaries
-If ( "-Not (Test-Path $pandoc) -or -Not (Test-Path $pp)" ) { 
+If ( -Not (Test-Path $pandoc) -or -Not (Test-Path $pp) ) { 
 	"Error: Neither pp nor pandoc were found in your path or in the current working directory"
 	Exit
 }
