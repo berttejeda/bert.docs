@@ -47,12 +47,12 @@ Here's how I accomplished my goal:
 
 # Requirements
 
-In order for all of this to work, you'll need:
-
-- **python 2.7+**
-- [pandoc](https://pandoc.org/installing.html)
-- [pp](https://github.com/CDSoft/pp) (Pre-compiled binaries available for Windows and Linux)
-- [cmder](http://cmder.net/)(optional, full version is best as it ships with git-bash)
+* optional:
+    - **python 2.7+** (only if you plan on installing pandoc python module, i.e. `pip install pandoc`)
+    - [cmder](http://cmder.net/)(full version is best, as it ships with git-bash)
+* mandatory:
+    - [pandoc](https://pandoc.org/installing.html)
+    - [pp](https://github.com/CDSoft/pp) (Pre-compiled binaries available for Windows and Linux)
 
 # Features
 
@@ -111,7 +111,8 @@ Note: Although the same parameters are available to `build.bat`, I have not impl
     	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.css,*.html -i 5`
 - Invoke the build script from the hta:
     - Just click the `Rebuild` button located in the top navigation bar.<br />
-    This will call the powershell build script. Press F5 to refresh the HTA application
+    This will invoke the powershell build script so long as it is located in the same directory as the HTA<br />
+    Press F5 to refresh the HTA application
 
 ## Example2: Build an HTML file from the markdown file
 
@@ -121,16 +122,17 @@ Note: Although the same parameters are available to `build.bat`, I have not impl
 ## Example3: Add powershell to your document
 
 - Add some powershell to the [default.markdown](_template/default.markdown):
+
 ```powershell
-<a href="#" id="testing" class="powershell">CLICKME: POWERSHELL
+<a href="#" id="testing" class="powershell">CLICKME: PowerShell
 <!--         
-'You executed powershell!'
+Write-Host 'You executed PowerShell!'
 &pause
 -->
 </a> 
 ```
 
-As illustrated, you must enclose your commands in comment tags ```<!-- -->```
+As illustrated, you must enclose your commands/includes in comment tags ```<!-- -->```
 
 Do the same, this time with a non-interactive shell session:
 
@@ -140,6 +142,16 @@ Do the same, this time with a non-interactive shell session:
 'You executed powershell!'
 -->
 </a> 
+```
+
+- Again, but using the `!include` macro:
+
+```html
+<a href="#" id="include" class="powershell" data-interactive="0">CLICKME: PowerShell
+<!--         
+!include(src/include.ps1)
+-->
+</a>
 ```
 
 Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5. Your changes should have been rendered.
@@ -163,8 +175,7 @@ Once the HTA file is rebuilt, you can refresh the HTA application by pressing F5
 
 ### Powershell Invocation
 
-The powershell invocation is done through a WScript.Shell ActiveX Object and clever Windows clipboard manipulation,
-
+The powershell invocation is done through a WScript.Shell ActiveX Object and clever Windows clipboard manipulation, 
 so there is no need for intermediary scripts to handle the powershell code.
 
 From [shell.js](_common/assets/js/shell.js):
