@@ -48,15 +48,15 @@ Here's how I accomplished my goal:
 # Requirements
 
 * optional:
-    - **python 2.7+** (only if you plan on installing pandoc python module, i.e. `pip install pandoc`)
-    - [cmder](http://cmder.net/)(full version is best, as it ships with git-bash)
+    - **python 2.7+** (only if you plan on installing the pandoc python module, i.e. `pip install pandoc`)
+    - [cmder](http://cmder.net/)( the *full* version is best, as it ships with git-bash)
 * mandatory:
     - [pandoc](https://pandoc.org/installing.html)
-    - [pp](https://github.com/CDSoft/pp) (Pre-compiled binaries available for Windows and Linux)
+    - [pp](https://github.com/CDSoft/pp) (Pre-compiled [binaries](https://github.com/CDSoft/pp#installation) available for Windows and Linux)
 
 # Features
 
-The [build.sh](build.sh) pandoc/pp wrapper script outputs a single .hta file as per specification.
+The [build.sh](build.sh)/[build.bat](build.bat) pandoc/pp wrapper scripts output a single .hta file as per specification.
 
 The file is completely self-contained, with assets embedded as base64 objects.
 
@@ -70,9 +70,9 @@ I plan on extending overall functionality to allow for wider integration of prog
 
 # How to use
 
-You should be able to install the project reqiurements using the [bootstrap.bat](bootstrap.bat) script (Windows).
+If you're on Windows, you should be able to install the project reqiurements using the [bootstrap.bat](bootstrap.bat) script.
 
-This will install `chocolatey`, `7zip`, `pp`, and `pandoc` on your system.
+This will install `chocolatey`, `pp`, and `pandoc` on your system. It requires the `7z` command, so it'll install that as well.
 
 The wrapper scripts [build.sh](build.sh) or [build.bat](build.bat) should help get you started with using this project.
 
@@ -92,7 +92,7 @@ param: --template|-t$, help: [some/template/file.html]
 param: --metavars|-m$, help: [some_pandoc_meta_var=somevalue]
 ```
 
-Note: Although the same parameters are available to `build.bat`, I have not implemented the filewatcher functionality as is present in the bash equivalent.
+Note: Although the same parameters are available to `build.bat`, I have not yet implemented the filewatcher functionality as is present in the bash equivalent.
 
 ## Example1: Build an HTA application from a markdown file
 
