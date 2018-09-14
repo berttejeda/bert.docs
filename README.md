@@ -70,7 +70,7 @@ I plan on extending overall functionality to allow for wider integration of prog
 
 # How to use
 
-If you're on Windows, you should be able to install the project reqiurements using the [bootstrap.bat](bootstrap.bat) script.
+If you're on Windows, you should be able to install the project requirements using the [bootstrap.bat](bootstrap.bat) script.
 
 This will install `chocolatey`, `pp`, and `pandoc` on your system. It requires the `7z` command, so it'll install that as well.
 
