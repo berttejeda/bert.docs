@@ -49,7 +49,7 @@ Here's how I accomplished my goal:
 
 * optional:
     - **python 2.7+** (only if you plan on installing the pandoc python module, i.e. `pip install pandoc`)
-    - [cmder](http://cmder.net/)( the *full* version is best, as it ships with git-bash)
+    - [cmder](http://cmder.net/)(the *full* version is best, as it ships with git-bash)
 * mandatory:
     - [pandoc](https://pandoc.org/installing.html)
     - [pp](https://github.com/CDSoft/pp) (Pre-compiled [binaries](https://github.com/CDSoft/pp#installation) available for Windows and Linux)
@@ -103,7 +103,7 @@ Note: Although the same parameters are available to `build.bat`, I have not yet 
         - powershell script:
             - `./build.bat -s _template\\default.markdown -o default.hta -t _template\\templates\\default.html`
 	- From `powershell`:
-        - `.\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html`
+        - `&.\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html`
     - To issue a dry run, simply include the `--dry` flag when you call the build script
     	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
     		`pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
