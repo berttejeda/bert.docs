@@ -5,6 +5,7 @@ PREFIX="eval"
 DEFAULT_TEMPLATE=_template/templates/default.html
 DEFAULT_HEADER=_common/templates/header.html
 DEFAULT_CSS=_common/templates/default.css
+DEFAULT_DOC_ROOT=.
 DELIM=_@DELIM@_
 t=1
 help(){
@@ -21,7 +22,10 @@ help(){
 declare -A params=(
 ["--source|-s$"]="[some/markdown/file.md,some/other/markdown/file2.md,includes/*]"
 ["--output|-o$"]="[some/output/file.html]"
+["--css|-c$"]="[some/style.css]"
+["--docroot|-r$"]="[some/path]"
 ["--template|-t$"]="[some/template/file.html]"
+["--header|-H$"]="[some/header.html]"
 ["--ppvars|-p$"]="[some_preprocess_var=somevalue]"
 ["--help|-h$"]="display usage and exit"
 ["--vars|-V$"]="[some_pandoc_var=somevalue]"
@@ -87,6 +91,7 @@ if [[ $vars ]];then
     option='-V '
     pandoc_commands+="-V ${vars: :-${#option}} " # strip the trailing option
 fi
+pandoc_commands+="-V docroot=${docroot-DEFAULT_DOC_ROOT} "
 if [[ $metavars ]];then
     metavars=${metavars//${DELIM}/ --metadata }
     option="--metadata "
@@ -100,10 +105,14 @@ fi
 if [[ -n $watch_patterns ]];then
     echo "Issuing initial build"
     # Invoke markdown pre-processor & pipe to pandoc
-    $PREFIX "${pp_commands} | ${pandoc_commands}"
+    if $PREFIX "${pp_commands} | ${pandoc_commands}";then
+        echo "Done. Initial output file is ${output_file}."
+    else
+        echo "Build failed."
+        exit 1
+    fi
     t=${interval-${t}}
     find_command="find "${watchdir-./}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
-    echo "Done. Initial output file is ${output_file}."
     echo "Monitoring for file changes as per ${find_command}"
     if [[ $PREFIX == 'eval' ]];then
         while true;do 
@@ -121,6 +130,10 @@ if [[ -n $watch_patterns ]];then
     fi
 else
     echo "Issuing build"
-    $PREFIX "${pp_commands} | ${pandoc_commands}"
-    echo "Done. Output file is ${output_file}"
+    if $PREFIX "${pp_commands} | ${pandoc_commands}";then
+        echo "Done. Output file is ${output_file}"
+    else
+        echo "Build failed."
+        exit 1
+    fi
 fi

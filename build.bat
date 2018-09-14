@@ -9,10 +9,14 @@ $DEFAULT_TEMPLATE = "_template/templates/default.html"
 $DEFAULT_OUTPUT_FILEEXT = "hta"
 $DEFAULT_HEADER = "_common/templates/header.html"
 $DEFAULT_CSS = "_common/templates/default.css"
+$DEFAULT_DOC_ROOT="."
 $t=1
 $params=@{'--source|-s$' =  "[some/markdown/file.md,some/other/markdown/file2.md,includes/*]";
 '--output|-o$' =  "[some/output/file.html]";
+'--css|-c$' =  "[some/style.css]";
+'--docroot|-r$' =  "[some/path]";
 '--template|-t$' =  "[some/template/file.html]";
+'--header|-H$' =  "[some/header.html]";
 '--ppvars|-p$' =  "[some_preprocess_var=somevalue]";
 '--vars|-V$' =  "[some_pandoc_var=somevalue]";
 '--metavars|-m$' =  "[some_pandoc_meta_var=somevalue]";
@@ -37,7 +41,7 @@ If (-Not $($ARGS)){
 ForEach ($ARG In $ARGS) {
 	$ArgValue = $($ARGS[$i+1])
 	ForEach ($param In $params.Keys) {
-		If ($ARG -match $param){
+		If ($ARG -cmatch $param){
 			If (-Not $ArgValue){
 				try{
 					$expression = "`$$($param.substring(0,$param.lastindexOf('|')).replace('-','')) = 'True'"
@@ -52,7 +56,7 @@ ForEach ($ARG In $ARGS) {
 					"Encountered an error in processing $param`: Value provided was $ArgValue"
 					Exit
 				}
-				$expression = "If ( `"$paramvar`" -match 'var') { `$$paramvar += '$($ArgValue)_@DELIM@_' } else { `$$paramvar = '$($ArgValue)' }"
+				$expression = "If ( `"$paramvar`" -cmatch 'var') { `$$paramvar += '$($ArgValue)_@DELIM@_' } else { `$$paramvar = '$($ArgValue)' }"
 			}
 			Invoke-Expression $expression
 		}
@@ -97,13 +101,15 @@ $pandoc_commands += "-H '$header' "
 $template = If ($template) {$template} Else {$DEFAULT_TEMPLATE}
 $pandoc_commands += "--template $template "
 If ($vars) {
-	If ($vars -match "_@DELIM@_"){
+	If ($vars -cmatch "_@DELIM@_"){
 		$vars = $vars.replace("_@DELIM@_"," -V ")
 		$pandoc_commands += "-V $($vars.Substring(0,$vars.Length-3)) "
 	} else {
 		$pandoc_commands += "-V $vars "
 	}
 }
+$docroot = If ($docroot) {$docroot} Else {$DEFAULT_DOC_ROOT}
+$pandoc_commands += "-V docroot=$($docroot) "
 If ($metavars) {
 	$metavars = $metavars.replace("_@DELIM@_"," --metadata ")
 	$pandoc_commands += "--metadata $($metavars.Substring(0,$metavars.Length-11)) "
@@ -122,12 +128,20 @@ If ($dry) {
 } else {
 	try{
 		"Invoking build commands."
-		Invoke-Expression "$pp_commands | $pandoc_commands"
-		"Done. Output file is $output_file"
+		Invoke-Expression "$pp_commands | $pandoc_commands"		
 	} catch {
-		"Failed to execute commands`:"
+		"Build failed. Exception during execution of commands`:"
 		"$pp_commands | $pandoc_commands"
 		"Errors`:"
 		$_.Exception
+		Exit 1
+	}
+	If ($LASTEXITCODE -ne 0){
+		"Build failed. Command exception during execution`:"
+		"$pp_commands | $pandoc_commands"
+		Exit 1
+	} Else {
+		"Done. Output file is $output_file"
+		Exit 0
 	}
 }
