@@ -51,6 +51,7 @@ Here's how I accomplished my goal:
     - **python 2.7+** (only if you plan on installing the pandoc python module, i.e. `pip install pandoc`)
     - [cmder](http://cmder.net/)(the *full* version is best, as it ships with git-bash)
 * mandatory:
+    - [ansible-taskrunner](https://github.com/berttejeda/ansible-taskrunner) # Don't worry, we're just utilizing the `tasks` command in `bash` mode, so no `ansible` needed!
     - [pandoc](https://pandoc.org/installing.html)
     - [pp](https://github.com/CDSoft/pp) (Pre-compiled [binaries](https://github.com/CDSoft/pp#installation) available for Windows and Linux)
 
@@ -74,41 +75,16 @@ If you're on Windows, you should be able to install the project requirements usi
 
 This will install `chocolatey`, `pp`, and `pandoc` on your system. It requires the `7z` command, so it'll install that as well.
 
-The wrapper scripts [build.sh](build.sh) or [build.bat](build.bat) should help get you started with using this project.
-
-```bash
-Usage: ./build.sh/build.bat
-param: --watchdir|-wd$, help: [somedir]
-param: --interval|-i$, help: [t>0]
-param: --vars|-V$, help: [some_pandoc_var=somevalue]
-param: --source|-s$, help: [some/markdown/file.md,some/other/markdown/file2.md,includes/*]
-param: --dry, help: Dry Run
-param: --output|-o$, help: [some/output/file.html]
-param: --watch|-w$, help: [somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]
-param: --ppvars|-p$, help: [some_preprocess_var=somevalue]
-param: --help|-h$, help: display usage and exit
-param: --no-aio|-aio$, help: No All-In-One
-param: --template|-t$, help: [some/template/file.html]
-param: --metavars|-m$, help: [some_pandoc_meta_var=somevalue]
-```
-
-Note: Although the same parameters are available to `build.bat`, I have not yet implemented the filewatcher functionality as is present in the bash equivalent.
-
 ## Example1: Build an HTA application from a markdown file
 
 - Invoke the build script from commandline:
-    - From `cmder`/`git-bash`:
-        - bash script:
-            - `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html`
-        - powershell script:
-            - `./build.bat -s _template\\default.markdown -o default.hta -t _template\\templates\\default.html`
-	- From `powershell`:
-        - `&.\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html`
+    - From `cmder`/`git-bash`:<br />
+        `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html`
     - To issue a dry run, simply include the `--dry` flag when you call the build script
-    	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
-    		`pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
-    - I've incorporated a poor man's filewatcher into the bash script which utilizes the `find` command to monitor file changes and trigger a rebuild based on specified parameters, e.g.
-    	- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html -w *.md,*.js,*.css,*.html -i 5`
+   	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
+        `pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
+    - I'm also utilizing [watchdog](https://github.com/gorakhargosh/watchdog) to monitor file changes and trigger a rebuild based on specified parameters, e.g.
+        `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html --watch --patterns '*.markdown,*.md,*.js,*.css,*.html'`
 - Invoke the build script from the hta:
     - Just click the `Rebuild` button located in the top navigation bar.<br />
     This will invoke the powershell build script so long as it is located in the same directory as the HTA<br />

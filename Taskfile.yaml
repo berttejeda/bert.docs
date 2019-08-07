@@ -1,0 +1,108 @@
+
+- hosts: myhosts
+  gather_facts: true
+  become: true
+  vars:
+    cli_provider: bash
+    template: _template/templates/default.html
+    docroot: .
+    curr_dir: $(pwd)
+    header: ${curr_dir}/_common/templates/header.html
+    css: ${curr_dir}/_common/templates/default.css
+    watch_patterns: .*
+    DELIM: _@DELIM@_
+    interval: 1
+    required_parameters:
+      --source|-s: source ## some/markdown/file.md,some/other/markdown/file2.md,includes/* 
+      --output|-o: output ## some/output/file.html
+    optional_parameters:
+      --css|-c$: css ## some/style.css
+      --template|-t: template ## Override default markdown template
+      --docroot|-r: docroot ## Override document root
+      --header|-H: header ## Override header template
+      --ppvars|-p: ppvars ## Specify extra pre-processor variables
+      --vars|-V: vars ## Specify extra pandoc variables
+      --metavars|-m: metavars ## Specify extra meta variables
+      --watchdir|-wd: watchdir ## Specify the directory for monitoring changes
+      --patterns|-wp: watch_patterns ## Specify pattern for watch mode, e.g. somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc
+      --interval|-i: interval ## Specify interval for watch mode [t>0]
+      --no-aio|-aio: noaio ## Instruct pandoc to not build a self-contained document
+      --dry: dry_run ## Dry Run, only echo the build command
+      --watch: build_and_watch ## Invoke the 'build_and_watch' make-style function
+    help:
+      message: |
+        Build a self-contained interactive HTML document
+      epilog:
+      examples:
+        - example1: |
+            Usage example 1
+        - example2: |
+            Usage example 2
+    functions:
+      build_pp_vars:
+        shell: bash
+        help: Build Pre-Processor Vars
+        hidden: true
+        source: |-
+          pp_commands="pp "
+          if [[ -n $ppvars ]];then
+              if [[ $ppvars =~ .*${DELIM}.* ]];then
+                  ppvars=${ppvars//${DELIM}/ -D }
+                  pp_commands+="-D ${ppvars: :-3} "
+              else
+                  pp_commands+="-D $ppvars "
+              fi
+          fi
+          pp_commands+="${source} "
+      build_pandoc_commands:
+        shell: bash
+        help: Build Pre-Processor Vars
+        hidden: true
+        source: |-
+          output_file=${output-${source%.*}.html}
+          pandoc_commands="pandoc "
+          pandoc_commands+="-o ${output_file} "
+          pandoc_commands+="-c ${css} "
+          pandoc_commands+="-H ${header} "
+          pandoc_commands+="--template ${template} "
+          if [[ $vars ]];then
+              vars=${vars//${DELIM}/ -V }
+              option='-V '
+              pandoc_commands+="-V ${vars: :-${#option}} " # strip the trailing option
+          fi
+          pandoc_commands+="-V docroot=${docroot} "
+          if [[ $metavars ]];then
+              metavars=${metavars//${DELIM}/ --metadata }
+              option="--metadata "
+              pandoc_commands+="--metadata ${metavars: :-${#option}} " # strip the trailing option
+          fi
+          if [[ -z $noaio ]];then 
+              pandoc_commands+="--self-contained "
+              pandoc_commands+=" --standalone "
+          fi
+      build:
+        shell: bash
+        help: Build output file
+        source: |-
+          build_pp_vars
+          build_pandoc_commands
+          if [[ -n $dry_run ]];then
+            PREFIX=echo
+          fi          
+          echo "Issuing build"
+          if $PREFIX ${pp_commands} | ${pandoc_commands};then
+              echo "Done. Output file is ${output_file}"
+          else
+              echo "Build failed."
+              exit 1
+          fi
+      build_and_watch:
+        shell: bash
+        help: Build output file and watch for changes
+        source: |-
+          build
+          echo "Watching for changes"
+          watchmedo shell-command \
+              --patterns="${watch_patterns}" \
+              --recursive \
+              --command="tasks run -s ${source} -o ${output} -t ${template} ---make build"        
