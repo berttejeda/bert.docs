@@ -57,7 +57,7 @@ Here's how I accomplished my goal:
 
 # Features
 
-The [build.sh](build.sh)/[build.bat](build.bat) pandoc/pp wrapper scripts output a single .hta file as per specification.
+The [tasks](https://github.com/berttejeda/ansible-taskrunner) command functions as a pandoc/pp wrapper to produce a single .hta file as per specification.
 
 The file is completely self-contained, with assets embedded as base64 objects.
 
@@ -236,7 +236,7 @@ Note the use of custom 'data-*' html attributes, keeping in compliance at least 
 
 If you encounter errors in your document(s), try building with the `--no-aio/-a` flag, as with:
 
-- `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html --no-aio`
+- `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html --no-aio`
 
 This will invoke the `pandoc` command without the `--standalone` and `--self-contained` flags, which results in a document that offers itself more willingly to inspection.
 

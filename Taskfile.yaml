@@ -26,7 +26,7 @@
       --watchdir|-wd: watchdir ## Specify the directory for monitoring changes
       --patterns|-wp: watch_patterns ## Specify pattern for watch mode, e.g. somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc
       --interval|-i: interval ## Specify interval for watch mode [t>0]
-      --no-aio|-aio: noaio ## Instruct pandoc to not build a self-contained document
+      --no-aio: noaio ## Instruct pandoc to not build a self-contained document
       --dry: dry_run ## Dry Run, only echo the build command
       --watch: build_and_watch ## Invoke the 'build_and_watch' make-style function
     help:
