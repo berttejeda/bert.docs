@@ -31,7 +31,8 @@ declare -A params=(
 ["--vars|-V$"]="[some_pandoc_var=somevalue]"
 ["--metavars|-m$"]="[some_pandoc_meta_var=somevalue]"
 ["--watchdir|-wd$"]="[somedir]"
-["--watch|-w$"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
+["--watch|-w$"]="Enable Watch Mode"
+["--patterns|-wp$"]="[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]"
 ["--interval|-i$"]="[t>0]"
 ["--no-aio|-aio$"]="No All-In-One"
 ["--dry"]="Dry Run"
@@ -57,15 +58,15 @@ fi
 
 # Parse file watcher patterns
 if [[ -n $watch ]];then
-    if [[ "${watch}" =~ .*, ]];then 
-        for pattern in ${watch//,/ };do
+    if [[ "${patterns}" =~ .*, ]];then 
+        for pattern in ${patterns//,/ };do
             watch_patterns+="'${pattern}',"
         done
         watch_patterns=" -name ${watch_patterns//,/ -o -name }"
         option='-o -name '
         watch_patterns="${watch_patterns: :-${#option}}" # strip the trailing option
     else 
-        watch_patterns=" -name ${watch}"
+        watch_patterns=" -name ${patterns}"
     fi
 fi
 # Build pre-processor commands
@@ -91,7 +92,7 @@ if [[ $vars ]];then
     option='-V '
     pandoc_commands+="-V ${vars: :-${#option}} " # strip the trailing option
 fi
-pandoc_commands+="-V docroot=${docroot-DEFAULT_DOC_ROOT} "
+pandoc_commands+="-V docroot=${docroot-${DEFAULT_DOC_ROOT}} "
 if [[ $metavars ]];then
     metavars=${metavars//${DELIM}/ --metadata }
     option="--metadata "
@@ -111,22 +112,12 @@ if [[ -n $watch_patterns ]];then
         echo "Build failed."
         exit 1
     fi
-    t=${interval-${t}}
-    find_command="find "${watchdir-./}" -newermt '${t} seconds ago' \( ${watch_patterns} \)"
-    echo "Monitoring for file changes as per ${find_command}"
     if [[ $PREFIX == 'eval' ]];then
-        while true;do 
-            find_result=$(eval "${find_command}")
-            if [[ -n "${find_result}" ]];then 
-                echo "Detected modification in ${find_result}"
-                echo "Issuing rebuild"
-                $PREFIX "${pp_commands} | ${pandoc_commands}"
-                echo "Done. Output file is ${output_file}"
-            else 
-                echo "No modifications detected ... waiting ${t} second(s)"
-            fi
-            sleep 1
-        done
+    echo "Watching for changes"
+    watchmedo shell-command \
+      --patterns="${watch_patterns}" \
+      --recursive \
+      --command="""$PREFIX "${pp_commands} | ${pandoc_commands}""""
     fi
 else
     echo "Issuing build"

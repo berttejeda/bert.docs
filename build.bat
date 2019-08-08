@@ -21,11 +21,13 @@ $params=@{'--source|-s$' =  "[some/markdown/file.md,some/other/markdown/file2.md
 '--vars|-V$' =  "[some_pandoc_var=somevalue]";
 '--metavars|-m$' =  "[some_pandoc_meta_var=somevalue]";
 '--watchdir|-d$' =  "[somedir]";
-'--watch|-w$' =  "[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]";
+'--watch|-w$' =  "Enable watch mode";
+'--patterns|-wp$' =  "[somefile1.md,somefile2.html,*.txt,*.md,*.js,*.etc]";
 '--interval|-i$' =  "[t>0]";
 '--no-aio|-aio$' =  "No All-In-One";
 '--help|-h$' =  "display usage and exit";
 '--dry|-y$' =  "Dry Run";
+'--subprocess|-sub$' =  "Script has been launched in subprocess mode";
 }
 FUNCTION Usage {
     WRITE-HOST "Usage: build.bat"
@@ -126,22 +128,34 @@ If ($dry) {
 	Write-Host "$pp_commands | $pandoc_commands"
 
 } else {
-	try{
-		"Invoking build commands."
-		Invoke-Expression "$pp_commands | $pandoc_commands"		
-	} catch {
-		"Build failed. Exception during execution of commands`:"
-		"$pp_commands | $pandoc_commands"
-		"Errors`:"
-		$_.Exception
-		Exit 1
+
+	FUNCTION build {
+		try{
+			"Invoking build commands."
+			Invoke-Expression "$pp_commands | $pandoc_commands"		
+		} catch {
+			"Build failed. Exception during execution of commands`:"
+			"$pp_commands | $pandoc_commands"
+			"Errors`:"
+			$_.Exception
+			Exit 1
+		}	
+
+		If ($LASTEXITCODE -ne 0){
+			"Build failed. Command exception during execution`:"
+			"$pp_commands | $pandoc_commands"
+			Exit 1
+		} Else {
+			"Done. Output file is $output_file"
+			Exit 0
+		}	
 	}
-	If ($LASTEXITCODE -ne 0){
-		"Build failed. Command exception during execution`:"
-		"$pp_commands | $pandoc_commands"
-		Exit 1
-	} Else {
-		"Done. Output file is $output_file"
-		Exit 0
+
+	If ( $watch -and -not $subprocess) {
+	    Write-Host "Watching for changes against $($patterns)"
+	    &watchmedo shell-command  --patterns="$($patterns)" --recursive --command="""build.bat $($ARGS) --subprocess"""
+	} else {
+		build
 	}
+
 }

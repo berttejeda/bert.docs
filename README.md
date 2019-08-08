@@ -79,12 +79,17 @@ This will install `chocolatey`, `pp`, and `pandoc` on your system. It requires t
 
 - Invoke the build script from commandline:
     - From `cmder`/`git-bash`:<br />
-        `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html`
-    - To issue a dry run, simply include the `--dry` flag when you call the build script
+        * Using the `tasks` command mentioned above<br />
+            `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html`
+        * Using the supplied `build.sh` bash script:<br />
+            `./build.sh -s _template/default.markdown -o default.hta -t _template/templates/default.html`
+        * Using the supplied powershell script:<br />
+            `./build.bat -s _template\\default.markdown -o default.hta -t _template\\templates\\default.html`
    	- Invoking any of the commands above with the `--dry` flag will display something similar to:<br />
         `pp _template/default.markdown | pandoc -o 'default.hta' -c '_common/templates/default.css' -H '_common/templates/header.html' --template _template/templates/default.html --self-contained --standalone`
-    - I'm also utilizing [watchdog](https://github.com/gorakhargosh/watchdog) to monitor file changes and trigger a rebuild based on specified parameters, e.g.
-        `tasks run -s _template/default.markdown -o default.hta -t _template/templates/default.html --watch --patterns '*.markdown,*.md,*.js,*.css,*.html'`
+    - I'm also utilizing [watchdog](https://github.com/gorakhargosh/watchdog) to monitor file changes and trigger a rebuild based on specified parameters<br />
+        Simply invoke any of the commands above with the `--watch --patterns` flags, e.g. <br />
+        `--watch --patterns '*.markdown,*.md,*.js,*.css,*.html'`
 - Invoke the build script from the hta:
     - Just click the `Rebuild` button located in the top navigation bar.<br />
     This will invoke the powershell build script so long as it is located in the same directory as the HTA<br />
