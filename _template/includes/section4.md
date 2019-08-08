@@ -1,3 +1,3 @@
-<div id="section4" class="section">
+<section id="section4" class="section">
 # Section 4
-</div>
+</section>
