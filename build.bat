@@ -11,6 +11,8 @@ $DEFAULT_HEADER = "_common/templates/header.html"
 $DEFAULT_CSS = "_common/templates/default.css"
 $DEFAULT_DOC_ROOT="."
 $t=1
+$pandoc = 'pandoc'
+$pp = 'pp'
 $params=@{'--source|-s$' =  "[some/markdown/file.md,some/other/markdown/file2.md,includes/*]";
 '--output|-o$' =  "[some/output/file.html]";
 '--css|-c$' =  "[some/style.css]";
@@ -80,9 +82,12 @@ ForEach ($binary in 'pandoc','pp') {
 }
 
 @@:: Check for required binaries
+Write-Host "Checking for reqiured binaries ..."
 If ( -Not (Test-Path $pandoc) -or -Not (Test-Path $pp) ) { 
 	"Error: Neither pp nor pandoc were found in your path or in the current working directory"
 	Exit
+} else {
+	Write-Host "Found both $($pandoc) and $($pp), proceeding ..."
 }
 
 @@:: Build pre-processor commands
@@ -132,10 +137,10 @@ If ($dry) {
 	FUNCTION build {
 		try{
 			"Invoking build commands."
-			Invoke-Expression "$pp_commands | $pandoc_commands"		
+			Invoke-Expression "$($pp_commands) | $($pandoc_commands)"		
 		} catch {
 			"Build failed. Exception during execution of commands`:"
-			"$pp_commands | $pandoc_commands"
+			"$($pp_commands) | $($pandoc_commands)"
 			"Errors`:"
 			$_.Exception
 			Exit 1
@@ -143,7 +148,7 @@ If ($dry) {
 
 		If ($LASTEXITCODE -ne 0){
 			"Build failed. Command exception during execution`:"
-			"$pp_commands | $pandoc_commands"
+			"$($pp_commands) | $($pandoc_commands)"
 			Exit 1
 		} Else {
 			"Done. Output file is $output_file"
