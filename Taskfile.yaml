@@ -16,7 +16,7 @@
       --source|-s: source ## some/markdown/file.md,some/other/markdown/file2.md,includes/* 
       --output|-o: output ## some/output/file.html
     optional_parameters:
-      --css|-c$: css ## some/style.css
+      --css|-c: css ## Override default style sheet specification
       --template|-t: template ## Override default markdown template
       --docroot|-r: docroot ## Override document root
       --header|-H: header ## Override header template
@@ -76,7 +76,9 @@
               option="--metadata "
               pandoc_commands+="--metadata ${metavars: :-${#option}} " # strip the trailing option
           fi
-          if [[ -z $noaio ]];then 
+          if [[ -n $noaio ]];then 
+              echo Building sans self-contained 
+          else
               pandoc_commands+="--self-contained "
               pandoc_commands+=" --standalone "
           fi
