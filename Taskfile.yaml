@@ -10,6 +10,7 @@
     header: ${curr_dir}/_common/templates/header.html
     css: ${curr_dir}/_common/templates/default.css
     watch_patterns: .*
+    VERSION_STRING: 19.08.08.00
     DELIM: _@DELIM@_
     interval: 1
     required_parameters:
@@ -39,6 +40,15 @@
         - example2: |
             Usage example 2
     functions:
+      check_exe:
+        shell: bash
+        hidden: true
+        source: |-
+          echo Checking for ${1} ...
+          if ! [[ ($(type /usr/{,local/}{,s}bin/${1} 2> /dev/null)) || ($(which ${1})) ]];then
+            echo "This function requires ${1}, see installation instructions: ${2}"
+            return 1
+          fi         
       build_pp_vars:
         shell: bash
         help: Build Pre-Processor Vars
@@ -65,6 +75,7 @@
           pandoc_commands+="-c ${css} "
           pandoc_commands+="-H ${header} "
           pandoc_commands+="--template ${template} "
+          pandoc_commands+="-V VERSION_STRING=${VERSION_STRING} "
           if [[ $vars ]];then
               vars=${vars//${DELIM}/ -V }
               option='-V '
@@ -86,13 +97,20 @@
         shell: bash
         help: Build output file
         source: |-
+          if ! check_exe pandoc https://pandoc.org/installing.html;then
+            return 1
+          fi
+          if ! check_exe pp https://github.com/CDSoft/pp#installation;then
+            return 1
+          fi         
           build_pp_vars
           build_pandoc_commands
           if [[ -n $dry_run ]];then
-            PREFIX=echo
+            echo $PREFIX ${pp_commands} \| ${pandoc_commands}
+            return
           fi          
           echo "Issuing build"
-          if $PREFIX ${pp_commands} | ${pandoc_commands};then
+          if ${pp_commands} | ${pandoc_commands};then
               echo "Done. Output file is ${output_file}"
           else
               echo "Build failed."
