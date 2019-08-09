@@ -50,14 +50,15 @@ Here's how I accomplished my goal:
 * optional:
     - **python 2.7+** (only if you plan on installing the pandoc python module, i.e. `pip install pandoc`)
     - [cmder](http://cmder.net/)(the *full* version is best, as it ships with git-bash)
-* mandatory:
     - [ansible-taskrunner](https://github.com/berttejeda/ansible-taskrunner) # Don't worry, we're just utilizing the `tasks` command in `bash` mode, so no `ansible` needed!
+* mandatory:
     - [pandoc](https://pandoc.org/installing.html)
     - [pp](https://github.com/CDSoft/pp) (Pre-compiled [binaries](https://github.com/CDSoft/pp#installation) available for Windows and Linux)
+    - The above binaries available in your **PATH**
+        - [How to set the PATH variable in Linux](https://opensource.com/article/17/6/set-path-linux)
+        - [How to set the PATH variable on Windows](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v%3Doffice.14))
 
 # Features
-
-The [tasks](https://github.com/berttejeda/ansible-taskrunner) command functions as a pandoc/pp wrapper to produce a single .hta file as per specification.
 
 The file is completely self-contained, with assets embedded as base64 objects.
 
@@ -76,6 +77,13 @@ If you're on Windows, you should be able to install the project requirements usi
 This will install `chocolatey`, `pp`, and `pandoc` on your system. It requires the `7z` command, so it'll install that as well.
 
 ## Example1: Build an HTA application from a markdown file
+
+You can invoke the build process in any of 3 ways:
+- Via the [tasks](https://github.com/berttejeda/ansible-taskrunner) command
+- Via the [build.sh](build.sh) script
+- Via the [build.bat](build.bat) script
+
+All of these act as a pandoc/pp wrapper to produce a single .hta/.html file as per specification.
 
 - Invoke the build script from commandline:
     - From `cmder`/`git-bash`:<br />
