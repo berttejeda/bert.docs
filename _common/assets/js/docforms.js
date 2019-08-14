@@ -24,15 +24,15 @@
 }(window.jQuery));
 
 function install () {
-    var strConstCancel = "You have chosen to cancel.";
-    var strPathHistory = "c:\\history"
-    var strPathSSO = "\\\\lvh.com\\distrib\$\\sw\\sso\\v8.0\\sso80_81svr.exe";
-    var strPathLWCE = "\\\\lvh.com\\distrib\$\\sw\\lcj\\lcj_webframework33.exe";
-    var strPathMSO2K3 = "\\\\lvh.com\\microsoftapps$\\sw\\msoff2003pro\\install office 2003 full.cmd";
-    var strPathMSOUT2K7 = "\\\\lvh.com\\microsoftapps$\\SW\\MSOfficeEnterprise2007\\Outlook2007.EXE";
-    var strPathTSYS = "\\\\lvh.com\\distrib$\\sw\\tsystem 3\\tsystem3.exe";
-    var strSemiforeMV = "metavision_icu.@!@"
-    var strPathKIX = "\\\\lvh.com\\sysvol\\lvh.com\\scripts\\kix32.exe";
+    // Check if elevated
+    var exec = WshShell.Exec("fsutil dirty query c:");
+    var result = exec.StdOut.ReadAll();
+    console.log(result);
+    var is_admin = (result.indexOf("denied")!=-1);
+    if (is_admin){
+        alert("This function requires elevated privileges, relaunching ...");
+        run_as_admin()
+    }
     $("input:checked").each(function() {
         var command_string=this.getAttribute('data-cmd-command')
         var cmd_keep_open=this.getAttribute('data-cmd-keep-open')
