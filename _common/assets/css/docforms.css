@@ -1,0 +1,60 @@
+.docforms {
+    border: 1px solid #aaa; 
+    border-radius: 5px;
+    height: 50%;
+    width: 50%;
+}
+
+.docforms ul {
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.docforms input[type=checkbox] { display: none; }
+.docforms label {
+    position: relative;
+    height: 38px; line-height: 36px; 
+    margin: 4px; padding: 0px 4px 0px 8px;
+    display: inline-block; cursor: pointer;
+    border: 1px solid #aaa; border-radius: 5px;
+    font-family: helvetica, sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+}
+.docforms label::before {
+    content: ''; position: absolute;
+    top: 0px; right: 32px;
+    height: 36px; width: 2px;
+    border-left: 1px solid #aaa;
+}
+.docforms label::after {
+    content: '\2713'; text-align: center;
+    margin-left: 12px; 
+    display: inline-block; border-radius: 4px;
+    border: 1px dashed #999;
+    height: 26px; line-height: 26px; width: 24px;
+}
+
+.docforms input[type=checkbox]:checked + label {
+    border: 1px solid #4575ab;
+    color: #4575ab;
+}
+.docforms input[type=checkbox]:checked + label::after {
+    border: 1px solid #4575ab; 
+    background-color: #4575ab;
+    color: #fff;
+}
+
+.docforms input[type=checkbox]:indeterminate  + label {
+    border: 1px solid #4575ab;
+    color: #4575ab;
+}
+.docforms input[type=checkbox]:indeterminate  + label::after {
+    content: '\2796'; text-align: center;
+    margin-left: 12px; 
+    display: inline-block; border-radius: 4px;
+    border: 1px solid #999;
+    height: 26px; line-height: 26px; width: 24px;
+}

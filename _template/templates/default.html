@@ -23,16 +23,16 @@ MIGHT BE USFEUL ;]
     <meta name="author" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <HTA:APPLICATION
-    ID="HTADOC.18.08.31.06"
+    ID="HTADOC.$VERSION_STRING$"
     APPLICATIONNAME="Title Here"
     CAPTION="Yes"
     BORDER="thick"
-    ICON="icon.ico"
+    ICON="#"
     SHOWINTASKBAR="Yes"
     SINGLEINSTANCE="Yes"
     SYSMENU=""
     WINDOWSTATE="maximize"
-    VERSION="18.08.31.06"
+    VERSION="$VERSION_STRING$"
     INNERBORDER="No"
     SELECTION="Yes"
     MAXIMIZEBUTTON="yes"
@@ -66,6 +66,7 @@ MIGHT BE USFEUL ;]
     <link href="$docroot$/_common/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="$docroot$/_common/assets/css/style.css" rel="stylesheet">
+    <link href="$docroot$/_common/assets/css/docforms.css" rel="stylesheet">
 </head>
 <body>
 
@@ -93,7 +94,7 @@ MIGHT BE USFEUL ;]
            &pause     
           -->
           </a> 
-          <a href="#" class="shell" data-shell="cmd">Start cmd!</a>
+          <a href="#" class="shell" data-shell="cmd" data-keep-open="1">Start cmd!</a>
           <a href="#" id="rebuild" class="powershell" data-interactive="0">Rebuild
           <!--         
             .\build.bat -s .\_template\default.markdown -o default.hta -t .\_template\templates\default.html
@@ -103,9 +104,11 @@ MIGHT BE USFEUL ;]
             <!--
             HTA Interactive Document
             Author: Bert Tejeda
-            Version: 18.08.31.06
+            Version: $VERSION_STRING$
             -->
           </a>
+          <a href="#" id="console">Console</a>
+          <a href="#" id="elevate">Elevate</a>
         </div>
         <!-- Page Content -->
         <div id="page-content-wrapper">
@@ -158,6 +161,16 @@ MIGHT BE USFEUL ;]
     var CWD = window.document.location.pathname;
     var date = new Date();
     </script>
+    <script type="text/javascript">
+    function run_as_admin(){
+        hta_path = CWD.substring(1)
+        var objShell = new ActiveXObject("Shell.Application");
+        console.log("Relaunching with elevated privileges")
+        console.log("Process Path is C:\\Windows\\System32\\mshta.exe " + hta_path )
+        objShell.ShellExecute("C:\\Windows\\System32\\mshta.exe", hta_path, '', 'runas', 1)
+        self.close()
+    }
+    </script>    
     <script src="_common/assets/js/jquery.min.js"></script>
     <script src="_common/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="_common/assets/js/string.js"></script>
@@ -167,6 +180,8 @@ MIGHT BE USFEUL ;]
     <script src="_common/assets/js/start.js"></script>
     <script src="_common/assets/js/console.js"></script>
     <script src="_common/assets/js/ui.js"></script>
+    <script src="_common/assets/js/docforms.js"></script>
+    <script src="_common/assets/js/debugging.js"></script>
 
 </body>
 </html>
