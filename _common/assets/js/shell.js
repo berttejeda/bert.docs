@@ -19,7 +19,7 @@ function powershell(command_string, interactive, pause){
     window.clipboardData.setData("Text",command_string); 
     var clipboardData = window.clipboardData.getData("Text");
     console.log("Powershell command is: " + clipboardData)
-    command = String.format("%comspec% /c {0} PowerShell -noprofile {1} -Command $commands=$(\"Set-ExecutionPolicy Bypass -Scope Process -Force;add-type -AssemblyName System.Windows.Forms;$clipboardData = [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n';[String]::Join( ';', $(  ( $clipboardData ) ))\");Invoke-Expression $commands 2>&1;{2} | clip", start, hidden, pause);
+    command = String.format("%comspec% /c {0} PowerShell -ExecutionPolicy Unrestricted -noprofile {1} -Command $commands=$(\"add-type -AssemblyName System.Windows.Forms;$clipboardData = [System.Windows.Forms.Clipboard]::GetText() -split '\\r\\n';[String]::Join( ';', $(  ( $clipboardData ) ))\");Invoke-Expression $commands 2>&1;{2} | clip", start, hidden, pause);
     console.log("Invoked Powershell command via: " + command)
     WshShell.run(command,0,true);
     console.log("STDOUT: " + window.clipboardData.getData("Text"));
@@ -59,25 +59,28 @@ function cmd(command_string){
 /**
 * Invoke a cmd shell
 */
-function shell(exe, params, command_string, start){
-    start = (start == 1) ? 'start \"\"':''
-    if (exe == 'powershell'){
-        command = '%comspec% /c powershell ' + command_string
-    } else if (exe == 'cmd'){    
-        command = '%comspec% /k ' + command_string
-    } else {
-        exe = WshShell.ExpandEnvironmentStrings(exe)
-        if (FileManager.FileExists(exe)) {
-        command = String.format("{0} {1} {2} {3}", exe, params, command_string, start)
-        } else {
-            alert(String.format("Expected path {0} not found", exe))
-            return
-        }
+function shell(exe, command_string, cmd_keep_open, cmd_new_window, program_window_style, wait_for_exit){
+    // exe = WshShell.ExpandEnvironmentStrings(exe)
+    if (command_string == null && cmd_keep_open != "/k"){
+        console.log(String.format('Skipped invocation for {0}: command String is null, yet data-cmd-keep-open is not set to /k', exe))
+        return
     }
+    command = String.format("{0} {1} {2} {3}", exe, cmd_keep_open, cmd_new_window, command_string) // e.g. cmd /c "" "" echo hello or cmd /c start "" echo hello
     try {
-        console.log(String.format("Invoked shell as per:\nexe: {0}\nparams:{1}\ncommand_string: {2}\nstart: {3}", exe, params, command_string, start))
-        WshShell.run(command)
-        return false
+        console.log("Invoked shell as per " + command)
+        console.log(String.format("Line in code is: WshShell.exec('{0}')",command))
+        if (WshShell != null) {
+            r = WshShell.exec(command)
+            console.log("Checking for STDOUT ...")
+            var OutStream = r.StdOut;
+            var StdOut = '""';
+            while (!OutStream.atEndOfStream) {
+            console.log("Reading STDOUT ...")
+            StdOut = StdOut + OutStream.readAll();
+            } 
+            console.log("StdOut: \n " + StdOut)
+            return true
+        }
     } catch (error) {
         alert(error)
         return false

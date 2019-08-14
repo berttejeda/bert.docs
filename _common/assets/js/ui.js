@@ -71,17 +71,18 @@ if (test != null){
     var regex = /<!--|-->/gi;
     command_string = test[0].replace(regex,'')
 } 
-var params=this.getAttribute('data-params')
-var start=this.getAttribute('data-start')
-params = (params != null) ? params:null
-start = (start == 1) ? start:0
-var exe=this.getAttribute('data-shell')
-if (exe == null){
-    alert("You must specify a shell for this link using the 'data-shell' attribute.\n e.g. <a href='#' class='shell' data-shell='powershell'>mylink</a>")
-} else {
-    shell(exe, params, command_string, start)    
-}
-
+var cmd_keep_open=this.getAttribute('data-cmd-keep-open')
+var cmd_new_window=this.getAttribute('data-cmd-new-window')
+var program_window_style=this.getAttribute('data-window-style')
+var wait_for_exit=this.getAttribute('data-wait')
+cmd_keep_open = (cmd_keep_open == 1) ? '/k':'/c'
+cmd_new_window = (cmd_new_window == 1) ? 'start \"\"':''
+// Specify WScript.Shell .Run parameters
+// Read more: .Run - VBScript - SS64.com
+// https://ss64.com/vb/run.html
+program_window_style = (program_window_style != null) ? program_window_style:1
+wait_for_exit = (wait_for_exit == 1) ? true:false
+shell('cmd.exe', command_string, cmd_keep_open, cmd_new_window, program_window_style, wait_for_exit)
 });
 //------------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -165,5 +166,17 @@ $( "a.flash" ).click(function() {
     if (selector != null){
         flash(selector, duration);
     }
+});
+/**
+* For the html link with id 'console', if clicked, show the hta console
+*/
+$("a[id='console']").click(function(e) {
+    htaConsole.toggle()
+}); 
+/**
+* For the html link with id 'runas', if clicked, relaunch the HTA as admin
+*/
+$("a[id='elevate']").click(function(e) {
+    run_as_admin()
 }); 
 //------------------------------------------------------------------------------------------------------------------------------------------
