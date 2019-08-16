@@ -27,18 +27,17 @@ function install () {
     // Check if elevated
     var exec = WshShell.Exec("cacls %SYSTEMROOT%\\system32\\config");
     var result = exec.StdOut.ReadAll();
-    console.log(result);
     var is_admin = (result.indexOf("denied")!=-1);
     if (is_admin){
         alert("This function requires elevated privileges, relaunching ...");
         run_as_admin()
     }
     $("input:checked").each(function() {
-        var command_string=this.getAttribute('data-cmd-command')
-        var cmd_keep_open=this.getAttribute('data-cmd-keep-open')
-        var cmd_new_window=this.getAttribute('data-cmd-new-window')
-        var program_window_style=this.getAttribute('data-window-style')
-        var wait_for_exit=this.getAttribute('data-wait')
+        var command_string=$(this).data('cmdCommand')
+        var cmd_keep_open=$(this).data('cmdKeepOpen')
+        var cmd_new_window=$(this).data('cmdNewWindow')
+        var program_window_style=$(this).data('windowStyle')
+        var wait_for_exit=$(this).data('wait')
         cmd_keep_open = (cmd_keep_open == 1) ? '/k':'/c'
         cmd_new_window = (cmd_new_window == 1) ? 'start \"\"':''
         // Specify WScript.Shell .Run parameters

@@ -71,10 +71,10 @@ if (test != null){
     var regex = /<!--|-->/gi;
     command_string = test[0].replace(regex,'')
 } 
-var cmd_keep_open=this.getAttribute('data-cmd-keep-open')
-var cmd_new_window=this.getAttribute('data-cmd-new-window')
-var program_window_style=this.getAttribute('data-window-style')
-var wait_for_exit=this.getAttribute('data-wait')
+var cmd_keep_open=$(this).data('cmdKeepOpen')
+var cmd_new_window=$(this).data('cmdNewWindow')
+var program_window_style=$(this).data('windowStyle')
+var wait_for_exit=$(this).data('wait')
 cmd_keep_open = (cmd_keep_open == 1) ? '/k':'/c'
 cmd_new_window = (cmd_new_window == 1) ? 'start \"\"':''
 // Specify WScript.Shell .Run parameters
