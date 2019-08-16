@@ -71,11 +71,10 @@ function shell(exe, command_string, cmd_keep_open, cmd_new_window, program_windo
         console.log(String.format("Line in code is: WshShell.exec('{0}')",command))
         if (WshShell != null) {
             r = WshShell.exec(command)
-            console.log("Checking for STDOUT ...")
+            console.log("Reading STDOUT ...")
             var OutStream = r.StdOut;
             var StdOut = '""';
             while (!OutStream.atEndOfStream) {
-            console.log("Reading STDOUT ...")
             StdOut = StdOut + OutStream.readAll();
             } 
             console.log("StdOut: \n " + StdOut)
