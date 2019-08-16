@@ -25,7 +25,7 @@
 
 function install () {
     // Check if elevated
-    var exec = WshShell.Exec("fsutil dirty query c:");
+    var exec = WshShell.Exec("cacls %SYSTEMROOT%\\system32\\config");
     var result = exec.StdOut.ReadAll();
     console.log(result);
     var is_admin = (result.indexOf("denied")!=-1);
